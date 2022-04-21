@@ -174,6 +174,7 @@ export function HomePageContainer() {
     }
     if (info.file.status === "done") {
       message.success(`${info.file.name} file uploaded successfully`);
+      fetchData("", 1);
     } else if (info.file.status === "error") {
       message.error(`${info.file.name} file upload failed.`);
     }
@@ -195,7 +196,6 @@ export function HomePageContainer() {
       })
       .then((res) => {
         onSuccess(file);
-        fetchData("", 1);
       })
       .catch((err) => {
         const error = new Error("Some error");
