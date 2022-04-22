@@ -157,6 +157,7 @@ export function HomePageContainer() {
       values.dob
     );
     console.log("Edit Data Success: " + data.success);
+    form.resetFields();
     fetchData("", 1);
   };
 
