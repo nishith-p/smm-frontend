@@ -6,6 +6,7 @@ import {
   Input,
   message,
   Modal,
+  notification,
   PageHeader,
   Row,
   Space,
@@ -106,6 +107,8 @@ export function HomePageContainer() {
 
         console.log("Dete Data Success: " + data.success);
 
+        openNotification("topRight", data.success);
+
         fetchData("", 1);
       },
     });
@@ -130,6 +133,9 @@ export function HomePageContainer() {
       values.dob
     );
     console.log("Submit Data Success:" + data.success);
+
+    openNotification("topRight", data.success);
+
     form.resetFields();
     fetchData("", 1);
   };
@@ -157,6 +163,9 @@ export function HomePageContainer() {
       values.dob
     );
     console.log("Edit Data Success: " + data.success);
+
+    openNotification("topRight", data.success);
+
     form.resetFields();
     fetchData("", 1);
   };
@@ -204,6 +213,20 @@ export function HomePageContainer() {
       });
   };
 
+  const openNotification = (placement: any, success: boolean) => {
+    if (success) {
+      notification.success({
+        message: `Success!`,
+        placement,
+      });
+    } else {
+      notification.error({
+        message: `Error!`,
+        placement,
+      });
+    }
+  };
+
   return (
     <>
       <PageHeader
@@ -225,7 +248,10 @@ export function HomePageContainer() {
         }}
       ></PageHeader>
 
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      <Row
+        style={{ marginRight: 0, marginLeft: 0 }}
+        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+      >
         <Col className="gutter-row" span={24}>
           <Search
             placeholder="Search.."
@@ -242,7 +268,10 @@ export function HomePageContainer() {
         </Col>
       </Row>
 
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      <Row
+        style={{ marginRight: 0, marginLeft: 0 }}
+        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+      >
         <Col className="gutter-row" span={24}>
           {/* <Hometable data={students} /> */}
           <Table
