@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import StudentService from "../../api/StudentService";
 import moment from "moment";
 import axios from "axios";
+import io, { Socket } from "socket.io-client";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
 
 export function HomePageContainer() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -27,7 +29,10 @@ export function HomePageContainer() {
   const [students, setStudents] = useState();
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
+  const [isImport, setIsImport] = useState();
   const [form] = Form.useForm();
+
+  let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
   const columns = [
     {
@@ -73,8 +78,18 @@ export function HomePageContainer() {
   ];
 
   useEffect(() => {
+    socket = io("http://localhost:3001");
+    socket.on("connection", (data) => console.log(data));
     fetchData("", 1);
   }, []);
+
+  useEffect(() => {
+    socket.on("newUpload", (data) => {
+      console.log(data.isComplete);
+      openNotificationQueue("topRight", data.isComplete);
+      fetchData("", 1);
+    });
+  }, [isImport]);
 
   /**
    * Main CRUD operations
@@ -222,6 +237,22 @@ export function HomePageContainer() {
     } else {
       notification.error({
         message: `Error!`,
+        placement,
+      });
+    }
+  };
+
+  const openNotificationQueue = (placement: any, success: boolean) => {
+    if (success) {
+      notification.success({
+        message: `Success!`,
+        description: "Excel file has been successfully imported.",
+        placement,
+      });
+    } else {
+      notification.error({
+        message: `Failed!`,
+        description: "Import failed.",
         placement,
       });
     }
